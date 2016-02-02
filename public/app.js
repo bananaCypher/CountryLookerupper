@@ -1,7 +1,9 @@
+// Globals
 var countries = [];
 var regions = [];
 var storageKey = 'lastCountry';
 
+// Constructors
 var Region = function(name){
    this.name = name; 
    this.subRegions = [];
@@ -10,6 +12,45 @@ var Region = function(name){
 var SubRegion = function(name){
     this.name = name;
     this.countries = [];
+}
+
+// Helper Functions
+var deleteElement = function(elementId) {
+    var element = document.getElementById(elementId);
+    if (element) {
+        element.parentNode.removeChild(element);
+    }
+}
+
+var searchFor = function(property, searchTerm, items){
+    for (var item of items){
+        if (item[property] === searchTerm) {
+            return item; 
+        }
+    }
+    return null;
+}
+
+var createRegionObjects = function(regionList, constructor, output){
+    for (region in regionList) {
+        var regionObject = new constructor(region);
+        regionObject.countries = regionList[region]; 
+        output.push(regionObject);
+    }
+}
+
+// Region Functions
+var getRegions = function(){
+    var regionList = {};
+    for (var country of countries) {
+        if (country.region in regionList) {
+            regionList[country.region].push(country);
+        } else {
+            regionList[country.region] = [country];
+        }
+    } 
+    createRegionObjects(regionList, Region, regions);
+    getSubRegions();
 }
 
 var getSubRegions = function(){
@@ -22,31 +63,11 @@ var getSubRegions = function(){
                 subRegionList[country.subregion] = [country];
             }        
         }
-        for (subRegion in subRegionList) {
-            var subRegionObject = new SubRegion(subRegion);
-            subRegionObject.countries = subRegionList[subRegion];
-            region.subRegions.push(subRegionObject);
-        }
+        createRegionObjects(subRegionList, SubRegion, region.subRegions);
     }
 }
 
-var getRegions = function(){
-    var regionList = {};
-    for (var country of countries) {
-        if (country.region in regionList) {
-            regionList[country.region].push(country);
-        } else {
-            regionList[country.region] = [country];
-        }
-    } 
-    for (region in regionList) {
-        var regionObject = new Region(region);
-        regionObject.countries = regionList[region]; 
-        regions.push(regionObject);
-    }
-    getSubRegions();
-}
-
+// Country functions
 var getBorderingCountries = function(country) {
     var borderCountries = [];
     for (border of country.borders) {
@@ -55,6 +76,46 @@ var getBorderingCountries = function(country) {
     return borderCountries;
 }
 
+
+// Selection box handlers
+var countrySelectionHandler = function(){
+    var selectBox = document.querySelector('#Countries');
+    var country = searchFor('name', selectBox.value, countries);
+    displayCountry(country);
+    localStorage.setItem(storageKey, JSON.stringify(country));
+}
+
+var regionSelectionHandler = function(){
+    var selectBox = document.querySelector('#Regions'); 
+    var region = searchFor('name', selectBox.value, regions);
+    var countryBox = document.querySelector('#Countries');
+    updateDropdown(countryBox, region.countries);
+    createDropdown('Subregions', region.subRegions, subregionSelectionHandler);
+}
+
+var subregionSelectionHandler = function(){
+    var selectBox = document.querySelector('#Subregions'); 
+    var region = searchFor('name', document.querySelector('#Regions').value, regions);
+    var subregion = searchFor('name', selectBox.value, region.subRegions);
+    var countryBox = document.querySelector('#Countries');
+    updateDropdown(countryBox, subregion.countries);
+}
+
+var checkboxHandler = function(){
+    if (this.checked) {
+        createDropdown('Regions', regions, regionSelectionHandler);
+    } else {
+        deleteElement('Regions');
+        deleteElement('label-Regions');
+        deleteElement('Subregions');
+        deleteElement('label-Subregions');
+        var countrySelect = document.querySelector('#Countries');
+        updateDropdown(countrySelect, countries);
+    }
+};
+
+
+// Display functions
 var displayCountry = function(country) {
     var countryDisplay = document.querySelector('#country-display');
     countryDisplay.innerHTML = '';
@@ -83,45 +144,10 @@ var displayCountry = function(country) {
     displayMap(country.latlng[0], country.latlng[1]);
 }
 
-var searchFor = function(property, searchTerm, items){
-    for (var item of items){
-        if (item[property] === searchTerm) {
-            return item; 
-        }
-    }
-    return null;
-}
-
-var countrySelectionHandler = function(){
-    var selectBox = document.querySelector('#Countries');
-    var country = searchFor('name', selectBox.value, countries);
-    displayCountry(country);
-    localStorage.setItem(storageKey, JSON.stringify(country));
-}
-
-var regionSelectionHandler = function(){
-    var selectBox = document.querySelector('#Regions'); 
-    var region = searchFor('name', selectBox.value, regions);
-    var countryBox = document.querySelector('#Countries');
-    updateDropdown(countryBox, region.countries);
-    createDropdown('Subregions', region.subRegions, subregionSelectionHandler);
-}
-
-var subregionSelectionHandler = function(){
-    var selectBox = document.querySelector('#Subregions'); 
-    var region = searchFor('name', document.querySelector('#Regions').value, regions);
-    var subregion = searchFor('name', selectBox.value, region.subRegions);
-    var countryBox = document.querySelector('#Countries');
-    updateDropdown(countryBox, subregion.countries);
-}
-
 var createDropdown = function(label, items, onChangeFunction) {
-    var oldSelectBox = document.querySelector('#' + label);
-    var oldLabel = document.querySelector('#label-' + label);
-    if (oldSelectBox) {
-        oldSelectBox.parentNode.removeChild(oldSelectBox);
-        oldLabel.parentNode.removeChild(oldLabel);
-    }
+    deleteElement(label);
+    deleteElement('label-' + label);
+
     var selectBox = document.createElement('select'); 
     var documentBody = document.querySelector('body');
 
@@ -150,47 +176,6 @@ var updateDropdown = function(selectBox, items) {
     }
 };
 
-var checkboxHandler = function(){
-    if (this.checked) {
-        createDropdown('Regions', regions, regionSelectionHandler);
-    } else {
-        var regionLabel = document.querySelector('#Regions');
-        var regionSelect = document.querySelector('#label-Regions');
-        var subregionLabel = document.querySelector('#Subregions');
-        var subregionSelect = document.querySelector('#label-Subregions');
-        regionLabel.parentNode.removeChild(regionLabel);
-        regionSelect.parentNode.removeChild(regionSelect);
-        subregionLabel.parentNode.removeChild(subregionLabel);
-        subregionSelect.parentNode.removeChild(subregionSelect);
-        var countrySelect = document.querySelector('#Countries');
-        updateDropdown(countrySelect, countries);
-    }
-};
-
-window.onload = function(){
-    console.log('App started');
-    var url = 'https://restcountries.eu/rest/v1';
-    var request = new XMLHttpRequest();
-
-    var checkbox = document.querySelector('#filter-regions');
-    checkbox.onclick = checkboxHandler;
-
-    request.open('GET', url);
-    request.onload = function(){
-        if (request.status === 200) {
-            countries = JSON.parse(request.responseText);
-            getRegions();
-            displayCountry(countries[0]);
-            createDropdown('Countries', countries, countrySelectionHandler);
-            var lastCountry = JSON.parse(localStorage.getItem(storageKey));
-            var selectBox = document.querySelector('select') 
-            selectBox.value = lastCountry.name;
-            displayCountry(lastCountry);
-        }
-    };
-    request.send(null);
-};
-
 var displayMap = function(latitude, longitude){
     var position = {lat: latitude, lng: longitude}
     var mapCanvas = document.getElementById('map');
@@ -204,4 +189,29 @@ var displayMap = function(latitude, longitude){
         position: position,
         map: map,
     }); 
+};
+
+// Init
+window.onload = function(){
+    console.log('App started');
+    var url = 'https://restcountries.eu/rest/v1';
+    var request = new XMLHttpRequest();
+
+    var checkbox = document.querySelector('#filter-regions');
+    checkbox.onclick = checkboxHandler;
+
+    request.open('GET', url);
+    request.onload = function(){
+        if (request.status === 200) {
+            countries = JSON.parse(request.responseText);
+            getRegions();
+            displayCountry(countries[0]); //in case there are no saved countries
+            createDropdown('Countries', countries, countrySelectionHandler);
+            var lastCountry = JSON.parse(localStorage.getItem(storageKey));
+            var selectBox = document.querySelector('select') 
+            selectBox.value = lastCountry.name;
+            displayCountry(lastCountry);
+        }
+    };
+    request.send(null);
 };
