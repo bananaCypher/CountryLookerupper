@@ -149,7 +149,7 @@ var createDropdown = function(label, items, onChangeFunction) {
     deleteElement('label-' + label);
 
     var selectBox = document.createElement('select'); 
-    var documentBody = document.querySelector('body');
+    var selectContainer = document.querySelector('#select-container');
 
     for (var item of items) {
         var option = document.createElement('option');
@@ -163,8 +163,8 @@ var createDropdown = function(label, items, onChangeFunction) {
     var labelElement = document.createElement('label');
     labelElement.id = 'label-' + label; 
     labelElement.innerText = label;
-    documentBody.appendChild(labelElement);
-    documentBody.appendChild(selectBox);
+    selectContainer.appendChild(labelElement);
+    selectContainer.appendChild(selectBox);
 };
 
 var updateDropdown = function(selectBox, items) {

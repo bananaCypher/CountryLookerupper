@@ -1,0 +1,190 @@
+body {
+  background-color: rgb(223, 223, 223);
+}
+
+/* HELPERS */
+
+.shadow {
+    box-shadow: 0px 5px 10px #b1b1b1;
+}
+
+/* HEADER & NAV */
+
+header {
+
+}
+
+nav {
+  background-color: rgb(38, 45, 66);
+  height: 65px;
+  margin-bottom: 30px;
+}
+
+nav ul {
+  padding-left: 0px;
+  margin: 0px;
+  list-style-type: none;
+  line-height: 65px;
+}
+
+nav ul li {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: white;
+  font-size: 12px;
+  font-weight: 100;
+}
+
+.logo {
+  color: white;
+  line-height: 65px;
+  margin-left: 20px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+footer {
+  height: 100px;
+  background-color: pink;
+}
+
+.go-left {
+  float: left;
+}
+
+.go-right {
+  float: right;
+}
+
+/* GRID FRAMEWORK */
+
+.container {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.row {
+  display: block;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+.grid {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: -4px;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.grid-1 {
+  width: 8.3333333%;
+}
+
+.grid-2 {
+  width: 16.666666%;
+}
+
+.grid-3 {
+  width: 25%;
+}
+
+.grid-4 {
+  width: 33.3333333%;
+}
+
+.grid-5 {
+  width: 41.6666666%;
+}
+
+.grid-6 {
+  width: 50%;
+}
+
+.grid-7 {
+  width: 58.3333333%;
+}
+
+.grid-8 {
+  width: 66.6666666%;
+}
+
+.grid-9 {
+  width: 75%;
+}
+
+.grid-10 {
+  width: 83.3333333%;
+}
+
+.grid-11 {
+  width: 91.6666666%;
+}
+
+.grid-12 {
+  width: 100%;
+}
+
+/* PANELS */
+
+.panel {
+  margin-bottom: 15px;
+  background-color: white;
+}
+
+.panel-heading {
+  padding: 15px 20px;
+  font-size: 26px;
+  color: #fff;
+}
+
+.panel-primary .panel-heading {
+  background-color: rgb(51, 188, 184);
+}
+
+.panel-secondary .panel-heading {
+  background-color: rgb(38, 45, 66);
+}
+
+.panel-body {
+  padding: 15px 20px;
+}
+
+.panel-footer {
+  background-color: rgb(241, 251, 251);
+  padding: 8px 20px;
+}
+
+/* TABLES */
+
+table {
+    width: 100%;
+}
+
+thead {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+th, td {
+    height: 35px;
+    font-size 12px;
+    font-weight: 100;
+    text-align: left;
+    padding: 0 10px;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: rgb(241, 251, 251);
+}
+
+tbody tr:hover {
+    background-color: wheat; 
+}
+
+select {
+    display: block;
+}

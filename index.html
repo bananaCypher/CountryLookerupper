@@ -3,13 +3,43 @@
   <head>
     <title>Startpoint</title>
     <link rel='stylesheet' type='text/css' href='main.css'>
+    <link rel="stylesheet" href="normalize.css" type="text/css">
     <script src='app.js'></script>
     <script src="https://maps.googleapis.com/maps/api/js"></script>
   </head>
   <body>
-    <div id='map' style='width: 500px; height: 400px;'></div>    
-      <div id="country-display">
-      </div>
-      <label for="Filter_by_regions">Filter by regions</label><input type="checkbox" name="Filter_by_regions" value="" id="filter-regions">
+    <nav class="shadow">
+        <div class="container">
+            <div class="go-left">
+                <div class="logo">
+                    Country Lookerupper
+                </div>
+            </div>
+        </div>
+    </nav>
+    <section style="padding: 15px;">
+        <div class="row">
+           <div class="grid grid-9">
+              <div class="panel panel-primary shadow">
+                 <div class="panel-heading">Country details</div> 
+                 <div class="panel-body">
+                    <div id='map' style='width: 500px; height: 400px;'></div>    
+                    <div id="country-display"></div>
+                 </div>
+              </div> 
+           </div> 
+           <div class="grid grid-3">
+              <div class="panel panel-secondary shadow">
+                  <div class="panel-heading">Change country</div>
+                  <div class="panel-body">
+                    <div id="select-container" class="name">
+                        
+                    </div>
+                    <label for="Filter_by_regions">Filter by regions</label><input type="checkbox" name="Filter_by_regions" value="" id="filter-regions">
+                  </div>
+              </div> 
+           </div>
+        </div>
+    </section>
   </body>
 </html>
