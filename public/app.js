@@ -2,6 +2,7 @@
 var countries = [];
 var regions = [];
 var storageKey = 'lastCountry';
+var userLocation = new UserLocation();
 
 // Constructors
 var Region = function(name){
@@ -114,6 +115,10 @@ var checkboxHandler = function(){
     }
 };
 
+var showMyCountry = function(){
+   displayCountry(searchFor('alpha2Code', userCountry, countries)) ;
+};
+
 
 // Display functions
 var displayCountry = function(country) {
@@ -208,6 +213,8 @@ window.onload = function(){
 
     var checkbox = document.querySelector('#filter-regions');
     checkbox.onclick = checkboxHandler;
+    var myCountryButton = document.querySelector('#my-country-button');
+    myCountryButton.onclick = showMyCountry;
 
     request.open('GET', url);
     request.onload = function(){
