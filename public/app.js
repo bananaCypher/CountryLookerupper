@@ -117,8 +117,7 @@ var checkboxHandler = function(){
 
 // Display functions
 var displayCountry = function(country) {
-    var countryDisplay = document.querySelector('#country-display');
-    countryDisplay.innerHTML = '';
+    var countryDisplay = document.createElement('div');
 
     var countryName = document.createElement('p');
     var population = document.createElement('p');
@@ -141,7 +140,7 @@ var displayCountry = function(country) {
         borderListStart.appendChild(borderListItem);
     }
     countryDisplay.appendChild(borderListStart);
-    displayMap(country.latlng[0], country.latlng[1]);
+    displayMap(country, countryDisplay);
 }
 
 var createDropdown = function(label, items, onChangeFunction) {
@@ -165,6 +164,7 @@ var createDropdown = function(label, items, onChangeFunction) {
     labelElement.innerText = label;
     selectContainer.appendChild(labelElement);
     selectContainer.appendChild(selectBox);
+    return selectContainer;
 };
 
 var updateDropdown = function(selectBox, items) {
@@ -176,8 +176,8 @@ var updateDropdown = function(selectBox, items) {
     }
 };
 
-var displayMap = function(latitude, longitude){
-    var position = {lat: latitude, lng: longitude}
+var displayMap = function(country, element){
+    var position = {lat: country.latlng[0], lng: country.latlng[1]}
     var mapCanvas = document.getElementById('map');
     var mapOptions = {
         center: position,
@@ -189,6 +189,15 @@ var displayMap = function(latitude, longitude){
         position: position,
         map: map,
     }); 
+    var infoWindow = new google.maps.InfoWindow({
+        content: element.innerHTML
+    }); 
+    marker.addListener('click', function(){
+        infoWindow.open(map, marker); 
+    });
+    map.addListener('click', function(){
+        infoWindow.close(); 
+    });
 };
 
 // Init
